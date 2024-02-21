@@ -4,7 +4,9 @@ namespace ApiPizzaCache.Repositories
 {
     public interface IPizzaRepository
     {
-        public List<PizzaModel> GetAll();
-        public PizzaModel Get(int id);
+        public List<PizzaModel> GetAllPizza();
+        public List<PizzaModel> GetAllPizzaCache();
+        public PizzaModel GetPizza(int id);
+        public void DeletePizza(int id);
     }
 }

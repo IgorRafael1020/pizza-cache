@@ -18,18 +18,60 @@ namespace ApiPizzaCache.Controllers
             _pizzaRepository = pizzaRepository;
         }
 
-        [HttpGet(Name = "ListaDePizza")]
-        public List<PizzaModel> Get()
+        [HttpGet]
+        public ActionResult Get()
         {
-            return _pizzaRepository.GetAll();
+            try
+            {
+                return Ok(_pizzaRepository.GetAllPizza());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("Cache")]
+        public ActionResult GetCache()
+        {
+            try
+            {
+                return Ok(_pizzaRepository.GetAllPizzaCache());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet]
         [Route("{id}")]
-        public PizzaModel Get(int id)
+        public ActionResult Get(int id)
         {
-            _logger.LogInformation( $"Pizza {id}");
-            return _pizzaRepository.Get(id);
+            try
+            {   
+                PizzaModel pizza = _pizzaRepository.GetPizza(id);
+                return pizza == null ? NotFound(id) : Ok(pizza);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                _pizzaRepository.DeletePizza(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
