@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  apipizzacache:
+    image: ${DOCKER_REGISTRY-}apipizzacache
+    build:
+      context: .
+      dockerfile: ApiPizzaCache/Dockerfile
+    environment:
+      - ENDERECO_REDIS=redis
+      - PORTA_REDIS=6379
+      - HASH_REDIS=PIZZA
+    networks:
+      - pizza-network
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - pizza-network
+networks:
+  pizza-network:

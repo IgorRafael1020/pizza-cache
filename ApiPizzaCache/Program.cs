@@ -1,5 +1,6 @@
 using ApiPizzaCache.Repositories;
-using ApiPizzaCache.Services;
+using ApiPizzaCache.Services.Pizza;
+using ApiPizzaCache.Services.Redis;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,10 +13,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IPizzaRepository, PizzaRepository>();
+builder.Services.AddScoped<IPizzaService, PizzaService>(); 
 builder.Services.AddScoped<IRedisService, RedisService>();
 
 // Configure Redis
-
 string enderecoRedis = Environment.GetEnvironmentVariable("ENDERECO_REDIS") ?? "localhost";
 string portaRedis = Environment.GetEnvironmentVariable("PORTA_REDIS") ?? "6379";
 
@@ -25,7 +26,7 @@ ConfigurationOptions options = new ConfigurationOptions
     EndPoints = { enderecoRedis, portaRedis }
 };
 
-ConnectionMultiplexer cluster = ConnectionMultiplexer.Connect(options);
+builder.Services.AddSingleton<IConnectionMultiplexer>(o => ConnectionMultiplexer.Connect(options));
 
 var app = builder.Build();
 
